@@ -24,7 +24,7 @@ def analyser_commande():
 
 def produire_historique(symbole, debut, fin, valeur):
     '''fonction qui trouve l'historique boursiere'''
-    liste = []  
+    liste = []
     url = f'https://pax.ulaval.ca/action/{symbole}/historique/'
     params = {'début': str(debut), 'fin': str(fin)}
     reponse = requests.get(url=url, params=params)

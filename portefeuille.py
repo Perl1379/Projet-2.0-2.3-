@@ -28,7 +28,7 @@ class Portefeuille(Bourse):
         if date > date.today():
             raise ErreurDate()
         total = 0
-        for i in self.liquidité.keys():
+        for i in self.liquidité:
             if i <= date:
                 total += self.liquidité[i]
         return total
@@ -90,15 +90,15 @@ class Portefeuille(Bourse):
         '''retourne le nombre d'action de chaque titre'''
         if date > date.today():
             raise ErreurDate()
-        Titres = {}
-        for d in self.action.keys():
+        actions = {}
+        for d in self.action:
             if d <= date:
                 for s in self.action[d].keys():
-                    if not Titres.get(s, None):
-                        Titres[s] = self.action[d][s]
+                    if not actions.get(s, None):
+                        actions[s] = self.action[d][s]
                     else:
-                        Titres[s] += self.action[d][s]
-        return Titres
+                        actions[s] += self.action[d][s]
+        return actions
 
 
     def valeur_projetée(self, date, rendement):
@@ -116,6 +116,6 @@ class Portefeuille(Bourse):
                 solde_action[s] = (solde_action[s]*(1+rendement/100)**ans +
                 solde_action[s]*(jours/365)*(rendement/100))
         valeur_action = 0
-        for a in solde_action.keys():
+        for a in solde_action:
             valeur_action += solde_action[a]
         return self.solde() + valeur_action
