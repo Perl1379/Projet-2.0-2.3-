@@ -93,7 +93,7 @@ class Portefeuille(Bourse):
         actions = {}
         for d in self.action:
             if d <= date:
-                for s in self.action[d].keys():
+                for s in self.action[d]:
                     if not actions.get(s, None):
                         actions[s] = self.action[d][s]
                     else:
