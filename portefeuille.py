@@ -21,17 +21,17 @@ class Portefeuille(Bourse):
             self.liquidité[date] = montant
         else:
             self.liquidité[date] += montant
-    
+
 
     def solde(self, date=date.today()):
         '''retourne le montant total dans liquidité'''
         if date > date.today():
             raise ErreurDate()
-        Solde = 0
-        for i in self.liquidité:
+        total = 0
+        for i in self.liquidité.keys():
             if i <= date:
-                Solde += self.liquidité[i]
-        return Solde
+                total += self.liquidité[i]
+        return total
 
 
     def acheter(self, symbole, quantité, date=date.today()):
@@ -64,7 +64,7 @@ class Portefeuille(Bourse):
                 self.action[date][symbole] = -quantité
             else:
                 self.action[date][symbole] -= quantité
-        
+
 
     def valeur_totale(self, date=date.today()):
         '''retourne la valeure totale du portefeuille'''
@@ -74,32 +74,32 @@ class Portefeuille(Bourse):
         for s in self.titres(date):
             valeur_action += self.bourse.prix(s, date)*self.titres(date)[s]
         return self.solde(date) + valeur_action
-        
-    
+
+
     def valeur_des_titres(self, symboles, date=date.today()):
         '''retourne la valeure des actions du portefeuille'''
         if date > date.today():
             raise ErreurDate()
-        Valeur_des_titres = 0
+        total_titres = 0
         for s in symboles:
-            Valeur_des_titres += self.bourse.prix(s, date)*self.titres(date)[s]
-        return Valeur_des_titres
-    
+            total_titres += self.bourse.prix(s, date)*self.titres(date)[s]
+        return total_titres
+
 
     def titres(self, date=date.today()):
         '''retourne le nombre d'action de chaque titre'''
         if date > date.today():
             raise ErreurDate()
         Titres = {}
-        for d in self.action:
+        for d in self.action.keys():
             if d <= date:
-                for s in self.action[d]:
+                for s in self.action[d].keys():
                     if not Titres.get(s, None):
                         Titres[s] = self.action[d][s]
                     else:
                         Titres[s] += self.action[d][s]
         return Titres
-    
+
 
     def valeur_projetée(self, date, rendement):
         '''retourne la valeure du portefeuille à un temps future après un rendement'''
@@ -109,12 +109,13 @@ class Portefeuille(Bourse):
         solde_action = {}
         for s in self.titres():
             solde_action[s] = self.valeur_des_titres([s])
-            if type(rendement) is dict:
-                solde_action[s] = (solde_action[s]*(1+rendement.get(s, 0)/100)**ans + solde_action[s]*(jours/365)*(rendement.get(s, 0)/100))
-            if type(rendement) is float:
-                solde_action[s] = (solde_action[s]*(1+rendement/100)**ans + solde_action[s]*(jours/365)*(rendement/100))
-        Valeur_action = 0
-        for S in solde_action:
-            Valeur_action += solde_action[S]
-        return self.solde() + Valeur_action
-        
+            if isinstance(rendement, dict):
+                solde_action[s] = (solde_action[s]*(1+rendement.get(s, 0)/100)**ans +
+                solde_action[s]*(jours/365)*(rendement.get(s, 0)/100))
+            if isinstance(rendement, float):
+                solde_action[s] = (solde_action[s]*(1+rendement/100)**ans +
+                solde_action[s]*(jours/365)*(rendement/100))
+        valeur_action = 0
+        for a in solde_action.keys():
+            valeur_action += solde_action[a]
+        return self.solde() + valeur_action
