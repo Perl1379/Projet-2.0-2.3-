@@ -86,7 +86,6 @@ def analyser_commande():
     parser_p.add_argument('-p', '--portefeuille', metavar='STRING', dest='portefeuille',
     help='Nom de portefeuille (par défaut, utiliser folio)', default='folio')
     return parser.parse_args()
-
 if not argpars.titres:
     for titre in titres:
         argpars.titres.append(titre) 
