@@ -89,4 +89,4 @@ def analyser_commande():
 
 if not argpars.titres:
     for titre in titres:
-        argpars.titres.append(titre)
+        argpars.titres.append(titre) 
